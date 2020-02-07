@@ -1749,6 +1749,23 @@ summary {
 
 
 <!-- rnb-text-begin -->
+<p>這篇筆記將一步一步介紹Kearney, et al.(2019)“NCEP-based simulation of hourly microclimate”之原理</p>
+<div id="step-1-安裝所需packages" class="section level2">
+<h2>Step 1: 安裝所需packages</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI+WuieijneaJgOmcgHBhY2thZ2Vz77yM5q2k5q2l6amf5pyD6ZyA6KaB57SEIDIwLTMwIG1pbuOAglxuI3BhY2thZ2U6IG1pY3JvY2xpbWHvvIzmnIPopoHmsYLmm7TmlrDntIQ1M+WAi+S+neiztHBhY2thZ2Vz44CCXG4j5bu66K2w5L2/55SoUkdVSeS+huWuieijne+8jOmBv+WFjeaguOW/g3BhY2thZ2Vz6ZyA6KaB5pu05paw5pmC5Ye654++ZXJyb3LvvIzlsI7oh7TnhKHms5Xlronoo51taWNyb2NsaW1h44CCXG5pbnN0YWxsLnBhY2thZ2VzKCdSTkNFUCcpXG5pbnN0YWxsLnBhY2thZ2VzKCdlbGV2YXRyJylcbmxpYnJhcnkoZGV2dG9vbHMpXG5pbnN0YWxsX2dpdGh1YignbXJrZS9OaWNoZU1hcFInKVxuaW5zdGFsbF9naXRodWIoJ2lseWFtYWNsZWFuL21pY3JvY2xpbWEnKVxuYGBgIn0= -->
+<pre class="r"><code>#安裝所需packages，此步驟會需要約 20-30 min。
+#package: microclima，會要求更新約53個依賴packages。
+#建議使用RGUI來安裝，避免核心packages需要更新時出現error，導致無法安裝microclima。
+install.packages(&#39;RNCEP&#39;)
+install.packages(&#39;elevatr&#39;)
+library(devtools)
+install_github(&#39;mrke/NicheMapR&#39;)
+install_github(&#39;ilyamaclean/microclima&#39;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook. When you execute code within the notebook, the results appear beneath the code.</p>
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
@@ -1758,12 +1775,10 @@ summary {
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em>.</p>
-<p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
-<p>The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike <em>Knit</em>, <em>Preview</em> does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.</p>
 <!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBhY2thZ2VzIGZvciBtaWNyb2NsaW1hdGUgZG93bmxvYWQgLS0g5L2/55So6Kqq5piOIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gDQoNClRyeSBleGVjdXRpbmcgdGhpcyBjaHVuayBieSBjbGlja2luZyB0aGUgKlJ1biogYnV0dG9uIHdpdGhpbiB0aGUgY2h1bmsgb3IgYnkgcGxhY2luZyB5b3VyIGN1cnNvciBpbnNpZGUgaXQgYW5kIHByZXNzaW5nICpDdHJsK1NoaWZ0K0VudGVyKi4gDQoNCmBgYHtyfQ0KcGxvdChjYXJzKQ0KYGBgDQoNCkFkZCBhIG5ldyBjaHVuayBieSBjbGlja2luZyB0aGUgKkluc2VydCBDaHVuayogYnV0dG9uIG9uIHRoZSB0b29sYmFyIG9yIGJ5IHByZXNzaW5nICpDdHJsK0FsdCtJKi4NCg0KV2hlbiB5b3Ugc2F2ZSB0aGUgbm90ZWJvb2ssIGFuIEhUTUwgZmlsZSBjb250YWluaW5nIHRoZSBjb2RlIGFuZCBvdXRwdXQgd2lsbCBiZSBzYXZlZCBhbG9uZ3NpZGUgaXQgKGNsaWNrIHRoZSAqUHJldmlldyogYnV0dG9uIG9yIHByZXNzICpDdHJsK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuDQoNClRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4NCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBhY2thZ2VzIGZvciBtaWNyb2NsaW1hdGUgZG93bmxvYWQgLS0g5L2/55So6Kqq5piOIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCumAmeevh+ethuiomOWwh+S4gOatpeS4gOatpeS7i+e0uUtlYXJuZXksIGV0IGFsLigyMDE5KSJOQ0VQLWJhc2VkIHNpbXVsYXRpb24gb2YgaG91cmx5IG1pY3JvY2xpbWF0ZSLkuYvljp/nkIYNCg0KIyMgU3RlcCAxOiDlronoo53miYDpnIBwYWNrYWdlcw0KYGBge3J9DQoj5a6J6KOd5omA6ZyAcGFja2FnZXPvvIzmraTmraXpqZ/mnIPpnIDopoHntIQgMjAtMzAgbWlu44CCDQojcGFja2FnZTogbWljcm9jbGltYe+8jOacg+imgeaxguabtOaWsOe0hDUz5YCL5L6d6LO0cGFja2FnZXPjgIINCiPlu7rorbDkvb/nlKhSR1VJ5L6G5a6J6KOd77yM6YG/5YWN5qC45b+DcGFja2FnZXPpnIDopoHmm7TmlrDmmYLlh7rnj75lcnJvcu+8jOWwjuiHtOeEoeazleWuieijnW1pY3JvY2xpbWHjgIINCmluc3RhbGwucGFja2FnZXMoJ1JOQ0VQJykNCmluc3RhbGwucGFja2FnZXMoJ2VsZXZhdHInKQ0KbGlicmFyeShkZXZ0b29scykNCmluc3RhbGxfZ2l0aHViKCdtcmtlL05pY2hlTWFwUicpDQppbnN0YWxsX2dpdGh1YignaWx5YW1hY2xlYW4vbWljcm9jbGltYScpDQpgYGANCg0KVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gDQoNClRyeSBleGVjdXRpbmcgdGhpcyBjaHVuayBieSBjbGlja2luZyB0aGUgKlJ1biogYnV0dG9uIHdpdGhpbiB0aGUgY2h1bmsgb3IgYnkgcGxhY2luZyB5b3VyIGN1cnNvciBpbnNpZGUgaXQgYW5kIHByZXNzaW5nICpDdHJsK1NoaWZ0K0VudGVyKi4gDQoNCmBgYHtyfQ0KcGxvdChjYXJzKQ0KYGBgDQoNCg==</div>
 
 
 

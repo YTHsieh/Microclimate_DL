@@ -2,6 +2,19 @@
 title: "Packages for microclimate download -- 使用說明"
 output: html_notebook
 ---
+這篇筆記將一步一步介紹Kearney, et al.(2019)"NCEP-based simulation of hourly microclimate"之原理
+
+## Step 1: 安裝所需packages
+```{r}
+#安裝所需packages，此步驟會需要約 20-30 min。
+#package: microclima，會要求更新約53個依賴packages。
+#建議使用RGUI來安裝，避免核心packages需要更新時出現error，導致無法安裝microclima。
+install.packages('RNCEP')
+install.packages('elevatr')
+library(devtools)
+install_github('mrke/NicheMapR')
+install_github('ilyamaclean/microclima')
+```
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
@@ -11,8 +24,3 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 plot(cars)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
