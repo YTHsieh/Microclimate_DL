@@ -5,16 +5,40 @@ output: html_notebook
 這篇筆記將一步一步介紹Kearney, et al.(2019)"NCEP-based simulation of hourly microclimate"之原理
 
 ## Step 1: 安裝所需packages
+依據作者給的說明文件，這個模擬方法主要依賴"NicheMapR"及"microclima"這兩個核心package。目前這兩個package都需要由Github下載安裝，整個過程會需要約 20-30 min。
 ```{r}
-#安裝所需packages，此步驟會需要約 20-30 min。
 #package: microclima，會要求更新約53個依賴packages。
 #建議使用RGUI來安裝，避免核心packages需要更新時出現error，導致無法安裝microclima。
+#由於microclima依賴包眾多，若出現error，則需不斷重複安裝直到所有依賴包安裝成功。
 install.packages('RNCEP')
 install.packages('elevatr')
 library(devtools)
 install_github('mrke/NicheMapR')
 install_github('ilyamaclean/microclima')
 ```
+
+
+
+```{r}
+library(NicheMapR)
+loc <- c(146.1103, -34.65478) # (longitude, latitude)
+dstart <- "01/01/2007" # start date
+dfinish <- "31/12/2010" # end date
+DEP <- c(0, 3, 5, 10, 15, 20, 30, 50, 100, 200) # specify depths
+save = 1 # save the input data (setting save = 2 uses previously saved input)
+micro <- micro_ncep(loc = loc, dstart = dstart, dfinish = dfinish, DEP = DEP, save = save)
+
+soil <- as.data.frame(micro$soil) # retrieve soil temperatures, minimum shade
+soil <- soil[micro$dates >= as.POSIXct("01/01/2008", format = "%d/%m/%Y"), ]
+dates <- micro$dates[micro$dates >= as.POSIXct("01/01/2008", format = "%d/%m/%Y")]
+
+# plot the results for 3 and 15 cm soil temperature
+par(mfrow = c(2,1))
+plot(soil$D3cm ~ dates, xlab = "date", ylab = "3 cm soil temperature (°C)", ylim = c(-10,70), type = "l", main = paste("3 cm soil temperature", sep = ""))
+plot(soil$D15cm ~ dates, xlab = "date", ylab = "15 cm soil temperature (°C)", ylim = c(-10,70), type = "l", main = paste("15 cm soil temperature", sep = ""))
+```
+
+
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 

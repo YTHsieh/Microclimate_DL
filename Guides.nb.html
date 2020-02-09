@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -1699,6 +1698,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1752,17 +1752,53 @@ summary {
 <p>這篇筆記將一步一步介紹Kearney, et al.(2019)“NCEP-based simulation of hourly microclimate”之原理</p>
 <div id="step-1-安裝所需packages" class="section level2">
 <h2>Step 1: 安裝所需packages</h2>
+<p>依據作者給的說明文件，這個模擬方法主要依賴“NicheMapR”及“microclima”這兩個核心package。目前這兩個package都需要由Github下載安裝，整個過程會需要約 20-30 min。</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI+WuieijneaJgOmcgHBhY2thZ2Vz77yM5q2k5q2l6amf5pyD6ZyA6KaB57SEIDIwLTMwIG1pbuOAglxuI3BhY2thZ2U6IG1pY3JvY2xpbWHvvIzmnIPopoHmsYLmm7TmlrDntIQ1M+WAi+S+neiztHBhY2thZ2Vz44CCXG4j5bu66K2w5L2/55SoUkdVSeS+huWuieijne+8jOmBv+WFjeaguOW/g3BhY2thZ2Vz6ZyA6KaB5pu05paw5pmC5Ye654++ZXJyb3LvvIzlsI7oh7TnhKHms5Xlronoo51taWNyb2NsaW1h44CCXG5pbnN0YWxsLnBhY2thZ2VzKCdSTkNFUCcpXG5pbnN0YWxsLnBhY2thZ2VzKCdlbGV2YXRyJylcbmxpYnJhcnkoZGV2dG9vbHMpXG5pbnN0YWxsX2dpdGh1YignbXJrZS9OaWNoZU1hcFInKVxuaW5zdGFsbF9naXRodWIoJ2lseWFtYWNsZWFuL21pY3JvY2xpbWEnKVxuYGBgIn0= -->
-<pre class="r"><code>#安裝所需packages，此步驟會需要約 20-30 min。
-#package: microclima，會要求更新約53個依賴packages。
-#建議使用RGUI來安裝，避免核心packages需要更新時出現error，導致無法安裝microclima。
-install.packages(&#39;RNCEP&#39;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI+aRsO+QpjxhMz7us4g8ODk+woA8ZTk+PDljPsKAcGFja2FnZXPlmpfvl7vov6jnlIfku788YTk+7riCPDljPu+BuTw5Yz7CgOmWrO68vTxiND48ODQ+IDIwLTMwIG1pbjxlMz7CgO69sW4jcGFja2FnZTogbWljcm9jbGltYeWal++Xuzw5Yz7vgbg8YTY+7ry8PGIxPu6/me6tnDxlNj7uoYfonZ08ODQ+NTM8ZTU+woDvlZw8YmU+7rOK6Zm3cGFja2FnZXM8ZTM+woDuvbFuI+aSseeuhOmZjembv+i8u+6chVJHVUnpnZjviYw8YWU+75CmPGEzPu6zkTxiYz7vl77uvJU8ZTU+PDg1Pu+amO65seaVue+AomFja2FnZXM8ZTk+PDljPsKA6Zas7ry87q2cPGU2Pu6hhzxlNj48OTk+7r+Y74q+PGU3Pu6QimVycm9y5ZqX75e6PGIwPu6Ol++KuDxlNz7vg47nmJzun588YWU+75CmPGEzPu6xsWljcm9jbGltYTxlMz7CgO69sW5pbnN0YWxsLnBhY2thZ2VzKCdSTkNFUCcpXG5pbnN0YWxsLnBhY2thZ2VzKCdlbGV2YXRyJylcbmxpYnJhcnkoZGV2dG9vbHMpXG5pbnN0YWxsX2dpdGh1YignbXJrZS9OaWNoZU1hcFInKVxuaW5zdGFsbF9naXRodWIoJ2lseWFtYWNsZWFuL21pY3JvY2xpbWEnKVxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
+#摰&lt;a3&gt;&lt;89&gt;&lt;e9&gt;&lt;9c&gt;packages嚗迨甇仿&lt;a9&gt;&lt;9c&gt;&lt;9c&gt;閬&lt;b4&gt;&lt;84&gt; 20-30 min&lt;e3&gt;n#package: microclima嚗&lt;9c&gt;&lt;a6&gt;&lt;b1&gt;&lt;e6&gt;蝝&lt;84&gt;53&lt;e5&gt;&lt;be&gt;陷packages&lt;e3&gt;n#撱箄降雿輻RGUI靘&lt;ae&gt;&lt;a3&gt;&lt;bc&gt;&lt;e5&gt;&lt;85&gt;敹ackages&lt;e9&gt;&lt;9c&gt;閬&lt;e6&gt;&lt;e6&gt;&lt;99&gt;&lt;e7&gt;error嚗&lt;b0&gt;&lt;e7&gt;瘜&lt;ae&gt;&lt;a3&gt;icroclima&lt;e3&gt;ninstall.packages(&#39;RNCEP&#39;)
 install.packages(&#39;elevatr&#39;)
 library(devtools)
 install_github(&#39;mrke/NicheMapR&#39;)
 install_github(&#39;ilyamaclean/microclima&#39;)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShOaWNoZU1hcFIpXG5sb2MgPC0gYygxNDYuMTEwMywgLTM0LjY1NDc4KSAjIChsb25naXR1ZGUsIGxhdGl0dWRlKVxuZHN0YXJ0IDwtIFwiMDEvMDEvMjAwN1wiICMgc3RhcnQgZGF0ZVxuZGZpbmlzaCA8LSBcIjMxLzEyLzIwMTBcIiAjIGVuZCBkYXRlXG5ERVAgPC0gYygwLCAzLCA1LCAxMCwgMTUsIDIwLCAzMCwgNTAsIDEwMCwgMjAwKSAjIHNwZWNpZnkgZGVwdGhzXG5zYXZlID0gMSAjIHNhdmUgdGhlIGlucHV0IGRhdGEgKHNldHRpbmcgc2F2ZSA9IDIgdXNlcyBwcmV2aW91c2x5IHNhdmVkIGlucHV0KVxubWljcm8gPC0gbWljcm9fbmNlcChsb2MgPSBsb2MsIGRzdGFydCA9IGRzdGFydCwgZGZpbmlzaCA9IGRmaW5pc2gsIERFUCA9IERFUCwgc2F2ZSA9IHNhdmUpXG5cbnNvaWwgPC0gYXMuZGF0YS5mcmFtZShtaWNybyRzb2lsKSAjIHJldHJpZXZlIHNvaWwgdGVtcGVyYXR1cmVzLCBtaW5pbXVtIHNoYWRlXG5zb2lsIDwtIHNvaWxbbWljcm8kZGF0ZXMgPj0gYXMuUE9TSVhjdChcIjAxLzAxLzIwMDhcIiwgZm9ybWF0ID0gXCIlZC8lbS8lWVwiKSwgXVxuZGF0ZXMgPC0gbWljcm8kZGF0ZXNbbWljcm8kZGF0ZXMgPj0gYXMuUE9TSVhjdChcIjAxLzAxLzIwMDhcIiwgZm9ybWF0ID0gXCIlZC8lbS8lWVwiKV1cblxuIyBwbG90IHRoZSByZXN1bHRzIGZvciAzIGFuZCAxNSBjbSBzb2lsIHRlbXBlcmF0dXJlXG5wYXIobWZyb3cgPSBjKDIsMSkpXG5wbG90KHNvaWwkRDNjbSB+IGRhdGVzLCB4bGFiID0gXCJkYXRlXCIsIHlsYWIgPSBcIjMgY20gc29pbCB0ZW1wZXJhdHVyZSAowrBDKVwiLCB5bGltID0gYygtMTAsNzApLCB0eXBlID0gXCJsXCIsIG1haW4gPSBwYXN0ZShcIjMgY20gc29pbCB0ZW1wZXJhdHVyZVwiLCBzZXAgPSBcIlwiKSlcbnBsb3Qoc29pbCREMTVjbSB+IGRhdGVzLCB4bGFiID0gXCJkYXRlXCIsIHlsYWIgPSBcIjE1IGNtIHNvaWwgdGVtcGVyYXR1cmUgKMKwQylcIiwgeWxpbSA9IGMoLTEwLDcwKSwgdHlwZSA9IFwibFwiLCBtYWluID0gcGFzdGUoXCIxNSBjbSBzb2lsIHRlbXBlcmF0dXJlXCIsIHNlcCA9IFwiXCIpKVxuYGBgIn0= --&gt;
+
+```r
+library(NicheMapR)
+loc &lt;- c(146.1103, -34.65478) # (longitude, latitude)
+dstart &lt;- &quot;01/01/2007&quot; # start date
+dfinish &lt;- &quot;31/12/2010&quot; # end date
+DEP &lt;- c(0, 3, 5, 10, 15, 20, 30, 50, 100, 200) # specify depths
+save = 1 # save the input data (setting save = 2 uses previously saved input)
+micro &lt;- micro_ncep(loc = loc, dstart = dstart, dfinish = dfinish, DEP = DEP, save = save)
+
+soil &lt;- as.data.frame(micro$soil) # retrieve soil temperatures, minimum shade
+soil &lt;- soil[micro$dates &gt;= as.POSIXct(&quot;01/01/2008&quot;, format = &quot;%d/%m/%Y&quot;), ]
+dates &lt;- micro$dates[micro$dates &gt;= as.POSIXct(&quot;01/01/2008&quot;, format = &quot;%d/%m/%Y&quot;)]
+
+# plot the results for 3 and 15 cm soil temperature
+par(mfrow = c(2,1))
+plot(soil$D3cm ~ dates, xlab = &quot;date&quot;, ylab = &quot;3 cm soil temperature (°C)&quot;, ylim = c(-10,70), type = &quot;l&quot;, main = paste(&quot;3 cm soil temperature&quot;, sep = &quot;&quot;))
+plot(soil$D15cm ~ dates, xlab = &quot;date&quot;, ylab = &quot;15 cm soil temperature (°C)&quot;, ylim = c(-10,70), type = &quot;l&quot;, main = paste(&quot;15 cm soil temperature&quot;, sep = &quot;&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1770,15 +1806,17 @@ install_github(&#39;ilyamaclean/microclima&#39;)</code></pre>
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChjYXJzKVxuYGBgIn0= -->
-<pre class="r"><code>plot(cars)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucGxvdChjYXJzKVxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
+plot(cars)</code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBhY2thZ2VzIGZvciBtaWNyb2NsaW1hdGUgZG93bmxvYWQgLS0g5L2/55So6Kqq5piOIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCumAmeevh+ethuiomOWwh+S4gOatpeS4gOatpeS7i+e0uUtlYXJuZXksIGV0IGFsLigyMDE5KSJOQ0VQLWJhc2VkIHNpbXVsYXRpb24gb2YgaG91cmx5IG1pY3JvY2xpbWF0ZSLkuYvljp/nkIYNCg0KIyMgU3RlcCAxOiDlronoo53miYDpnIBwYWNrYWdlcw0KYGBge3J9DQoj5a6J6KOd5omA6ZyAcGFja2FnZXPvvIzmraTmraXpqZ/mnIPpnIDopoHntIQgMjAtMzAgbWlu44CCDQojcGFja2FnZTogbWljcm9jbGltYe+8jOacg+imgeaxguabtOaWsOe0hDUz5YCL5L6d6LO0cGFja2FnZXPjgIINCiPlu7rorbDkvb/nlKhSR1VJ5L6G5a6J6KOd77yM6YG/5YWN5qC45b+DcGFja2FnZXPpnIDopoHmm7TmlrDmmYLlh7rnj75lcnJvcu+8jOWwjuiHtOeEoeazleWuieijnW1pY3JvY2xpbWHjgIINCmluc3RhbGwucGFja2FnZXMoJ1JOQ0VQJykNCmluc3RhbGwucGFja2FnZXMoJ2VsZXZhdHInKQ0KbGlicmFyeShkZXZ0b29scykNCmluc3RhbGxfZ2l0aHViKCdtcmtlL05pY2hlTWFwUicpDQppbnN0YWxsX2dpdGh1YignaWx5YW1hY2xlYW4vbWljcm9jbGltYScpDQpgYGANCg0KVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gDQoNClRyeSBleGVjdXRpbmcgdGhpcyBjaHVuayBieSBjbGlja2luZyB0aGUgKlJ1biogYnV0dG9uIHdpdGhpbiB0aGUgY2h1bmsgb3IgYnkgcGxhY2luZyB5b3VyIGN1cnNvciBpbnNpZGUgaXQgYW5kIHByZXNzaW5nICpDdHJsK1NoaWZ0K0VudGVyKi4gDQoNCmBgYHtyfQ0KcGxvdChjYXJzKQ0KYGBgDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBhY2thZ2VzIGZvciBtaWNyb2NsaW1hdGUgZG93bmxvYWQgLS0g5L2/55So6Kqq5piOIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCumAmeevh+ethuiomOWwh+S4gOatpeS4gOatpeS7i+e0uUtlYXJuZXksIGV0IGFsLigyMDE5KSJOQ0VQLWJhc2VkIHNpbXVsYXRpb24gb2YgaG91cmx5IG1pY3JvY2xpbWF0ZSLkuYvljp/nkIYNCg0KIyMgU3RlcCAxOiDlronoo53miYDpnIBwYWNrYWdlcw0K5L6d5pOa5L2c6ICF57Wm55qE6Kqq5piO5paH5Lu277yM6YCZ5YCL5qih5pOs5pa55rOV5Li76KaB5L6d6LO0Ik5pY2hlTWFwUiLlj4oibWljcm9jbGltYSLpgJnlhanlgIvmoLjlv4NwYWNrYWdl44CC55uu5YmN6YCZ5YWp5YCLcGFja2FnZemDvemcgOimgeeUsUdpdGh1YuS4i+i8ieWuieijne+8jOaVtOWAi+mBjueoi+acg+mcgOimgee0hCAyMC0zMCBtaW7jgIINCmBgYHtyfQ0KI3BhY2thZ2U6IG1pY3JvY2xpbWHvvIzmnIPopoHmsYLmm7TmlrDntIQ1M+WAi+S+neiztHBhY2thZ2Vz44CCDQoj5bu66K2w5L2/55SoUkdVSeS+huWuieijne+8jOmBv+WFjeaguOW/g3BhY2thZ2Vz6ZyA6KaB5pu05paw5pmC5Ye654++ZXJyb3LvvIzlsI7oh7TnhKHms5Xlronoo51taWNyb2NsaW1h44CCDQoj55Sx5pa8bWljcm9jbGltYeS+neiztOWMheecvuWkmu+8jOiLpeWHuuePvmVycm9y77yM5YmH6ZyA5LiN5pa36YeN6KSH5a6J6KOd55u05Yiw5omA5pyJ5L6d6LO05YyF5a6J6KOd5oiQ5Yqf44CCDQppbnN0YWxsLnBhY2thZ2VzKCdSTkNFUCcpDQppbnN0YWxsLnBhY2thZ2VzKCdlbGV2YXRyJykNCmxpYnJhcnkoZGV2dG9vbHMpDQppbnN0YWxsX2dpdGh1YignbXJrZS9OaWNoZU1hcFInKQ0KaW5zdGFsbF9naXRodWIoJ2lseWFtYWNsZWFuL21pY3JvY2xpbWEnKQ0KYGBgDQoNCg0KDQpgYGB7cn0NCmxpYnJhcnkoTmljaGVNYXBSKQ0KbG9jIDwtIGMoMTQ2LjExMDMsIC0zNC42NTQ3OCkgIyAobG9uZ2l0dWRlLCBsYXRpdHVkZSkNCmRzdGFydCA8LSAiMDEvMDEvMjAwNyIgIyBzdGFydCBkYXRlDQpkZmluaXNoIDwtICIzMS8xMi8yMDEwIiAjIGVuZCBkYXRlDQpERVAgPC0gYygwLCAzLCA1LCAxMCwgMTUsIDIwLCAzMCwgNTAsIDEwMCwgMjAwKSAjIHNwZWNpZnkgZGVwdGhzDQpzYXZlID0gMSAjIHNhdmUgdGhlIGlucHV0IGRhdGEgKHNldHRpbmcgc2F2ZSA9IDIgdXNlcyBwcmV2aW91c2x5IHNhdmVkIGlucHV0KQ0KbWljcm8gPC0gbWljcm9fbmNlcChsb2MgPSBsb2MsIGRzdGFydCA9IGRzdGFydCwgZGZpbmlzaCA9IGRmaW5pc2gsIERFUCA9IERFUCwgc2F2ZSA9IHNhdmUpDQoNCnNvaWwgPC0gYXMuZGF0YS5mcmFtZShtaWNybyRzb2lsKSAjIHJldHJpZXZlIHNvaWwgdGVtcGVyYXR1cmVzLCBtaW5pbXVtIHNoYWRlDQpzb2lsIDwtIHNvaWxbbWljcm8kZGF0ZXMgPj0gYXMuUE9TSVhjdCgiMDEvMDEvMjAwOCIsIGZvcm1hdCA9ICIlZC8lbS8lWSIpLCBdDQpkYXRlcyA8LSBtaWNybyRkYXRlc1ttaWNybyRkYXRlcyA+PSBhcy5QT1NJWGN0KCIwMS8wMS8yMDA4IiwgZm9ybWF0ID0gIiVkLyVtLyVZIildDQoNCiMgcGxvdCB0aGUgcmVzdWx0cyBmb3IgMyBhbmQgMTUgY20gc29pbCB0ZW1wZXJhdHVyZQ0KcGFyKG1mcm93ID0gYygyLDEpKQ0KcGxvdChzb2lsJEQzY20gfiBkYXRlcywgeGxhYiA9ICJkYXRlIiwgeWxhYiA9ICIzIGNtIHNvaWwgdGVtcGVyYXR1cmUgKMKwQykiLCB5bGltID0gYygtMTAsNzApLCB0eXBlID0gImwiLCBtYWluID0gcGFzdGUoIjMgY20gc29pbCB0ZW1wZXJhdHVyZSIsIHNlcCA9ICIiKSkNCnBsb3Qoc29pbCREMTVjbSB+IGRhdGVzLCB4bGFiID0gImRhdGUiLCB5bGFiID0gIjE1IGNtIHNvaWwgdGVtcGVyYXR1cmUgKMKwQykiLCB5bGltID0gYygtMTAsNzApLCB0eXBlID0gImwiLCBtYWluID0gcGFzdGUoIjE1IGNtIHNvaWwgdGVtcGVyYXR1cmUiLCBzZXAgPSAiIikpDQpgYGANCg0KDQoNClRoaXMgaXMgYW4gW1IgTWFya2Rvd25dKGh0dHA6Ly9ybWFya2Rvd24ucnN0dWRpby5jb20pIE5vdGVib29rLiBXaGVuIHlvdSBleGVjdXRlIGNvZGUgd2l0aGluIHRoZSBub3RlYm9vaywgdGhlIHJlc3VsdHMgYXBwZWFyIGJlbmVhdGggdGhlIGNvZGUuIA0KDQpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIA0KDQpgYGB7cn0NCnBsb3QoY2FycykNCmBgYA0KDQo=</div>
 
 
 
